@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-10-19 11:40:55
+Date: 2020-10-19 11:46:24
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,7 +30,7 @@ CREATE TABLE `client` (
   `created_by` int(10) unsigned NOT NULL,
   `updated_by` int(10) unsigned NOT NULL,
   `status_id` int(10) unsigned NOT NULL,
-  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
   PRIMARY KEY (`client_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -51,6 +51,7 @@ CREATE TABLE `log` (
   `token_id` int(11) unsigned DEFAULT NULL,
   `token_type_id` int(11) unsigned DEFAULT NULL,
   `recharge_id` int(11) unsigned DEFAULT NULL,
+  `log_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
