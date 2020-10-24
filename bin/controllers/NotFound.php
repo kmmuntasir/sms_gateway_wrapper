@@ -9,6 +9,6 @@ class NotFound extends REST_Controller {
 
 	public function index()
 	{
-		$this->restResponse(null, "NOT FOUND", "failed", HTTP_NOT_FOUND);
+		$this->restResponse(null, MESSAGE_NOT_FOUND, STATUS_FAILED, HTTP_NOT_FOUND);
 	}
 }

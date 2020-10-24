@@ -109,3 +109,27 @@ defined('POST')			OR define('POST', "POST");
 defined('PUT')			OR define('PUT', "PUT");
 defined('PATCH')			OR define('PATCH', "PATCH");
 defined('DELETE')			OR define('DELETE', "DELETE");
+
+/*
+|--------------------------------------------------------------------------
+| REST Controller Constants
+|--------------------------------------------------------------------------
+|
+*/
+define('HELPER_JWT', "jwt");
+define('HELPER_AUTHORIZATION', "authorization");
+
+define('HEADER_AUTHORIZATION', "Authorization");
+
+/*
+|--------------------------------------------------------------------------
+| Response Text Constants
+|--------------------------------------------------------------------------
+|
+*/
+define('MESSAGE_UNAUTHORIZED', "Unauthorized");
+define('MESSAGE_NOT_FOUND', "NOT FOUND");
+define('MESSAGE_SUCCESS', "success");
+
+define('STATUS_FAILED', "failed");
+define('STATUS_SUCCESS', "success");

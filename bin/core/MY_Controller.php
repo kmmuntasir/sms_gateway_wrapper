@@ -17,7 +17,7 @@ class REST_Controller extends MY_Controller {
 	public function __construct() {
 		parent::__construct();
 
-		$this->load->helper(['jwt', 'authorization']);
+		$this->load->helper([HELPER_JWT, HELPER_AUTHORIZATION]);
 		$this->prepareMethodData();
 		$this->setAuthorization();
 	}
@@ -27,7 +27,7 @@ class REST_Controller extends MY_Controller {
 	*/
 
 	private function setAuthorization() {
-		$this->_auth = $this->input->get_request_header('Authorization');
+		$this->_auth = $this->input->get_request_header(HEADER_AUTHORIZATION);
 		$this->_auth = substr($this->_auth, 7);
 	}
 
@@ -62,14 +62,14 @@ class REST_Controller extends MY_Controller {
 		$token = $this->auth();
 		$tokenData = $this->__validateToken($token);
 		if($tokenData) return $tokenData;
-		else return $this->restResponse(null, "Unauthorized", "failed", HTTP_UNAUTHORIZED);
+		else return $this->restResponse(null, MESSAGE_UNAUTHORIZED, STATUS_FAILED, HTTP_UNAUTHORIZED);
 	}
 
 	public function __refreshToken() {
 		$token = $this->auth();
 		$tokenData = $this->__validateToken($token);
 		if($tokenData) return $this->__generateToken($tokenData);
-		else return $this->restResponse(null, "Unauthorized", "failed", HTTP_UNAUTHORIZED);
+		else return $this->restResponse(null, MESSAGE_UNAUTHORIZED, STATUS_FAILED, HTTP_UNAUTHORIZED);
 	}
 
 	/*
@@ -132,8 +132,8 @@ class REST_Controller extends MY_Controller {
 	 */
 
 	public function response($payload, $message=NULL, $status=NULL) {
-		if(!$status) $status = "success";
-		if(!$message) $message = "success";
+		if(!$status) $status = STATUS_SUCCESS;
+		if(!$message) $message = MESSAGE_SUCCESS;
 
 		$response = new stdClass();
 		$response->status = $status;

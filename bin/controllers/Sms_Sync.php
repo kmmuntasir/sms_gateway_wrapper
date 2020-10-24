@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Unauth_Rest extends UNAUTH_REST_Controller {
+class Sms_Sync extends UNAUTH_REST_Controller {
 
 	public function __construct() {
 		parent::__construct();
