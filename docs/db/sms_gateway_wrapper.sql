@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-10-25 03:08:49
+Date: 2020-10-25 03:34:16
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -351,6 +351,7 @@ CREATE TABLE `token` (
   `token_expiry` timestamp NULL DEFAULT NULL,
   `token_type_id` int(10) unsigned NOT NULL,
   `client_id` int(10) unsigned NOT NULL,
+  `provider_token_id` int(10) unsigned NOT NULL,
   `created_by` int(10) unsigned NOT NULL,
   `updated_by` int(10) unsigned NOT NULL,
   `status_id` int(10) unsigned NOT NULL,
@@ -363,11 +364,13 @@ CREATE TABLE `token` (
   KEY `status_id` (`status_id`),
   KEY `client_id` (`client_id`),
   KEY `token_id` (`token_id`),
+  KEY `provider_token_id` (`provider_token_id`),
   CONSTRAINT `token_ibfk_1` FOREIGN KEY (`token_type_id`) REFERENCES `token_type` (`token_type_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `token_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `token_ibfk_3` FOREIGN KEY (`updated_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `token_ibfk_4` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `token_ibfk_5` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `token_ibfk_5` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `token_ibfk_6` FOREIGN KEY (`provider_token_id`) REFERENCES `provider_token` (`provider_token_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
