@@ -10,10 +10,53 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-10-19 21:57:25
+Date: 2020-10-25 03:00:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `api`
+-- ----------------------------
+DROP TABLE IF EXISTS `api`;
+CREATE TABLE `api` (
+  `api_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `api_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `provider_id` int(10) unsigned NOT NULL,
+  `api_type_id` int(10) unsigned NOT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `updated_by` int(11) unsigned NOT NULL,
+  `create_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  `status_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`api_id`),
+  KEY `api_type_id` (`api_type_id`),
+  KEY `created_by` (`created_by`),
+  KEY `updated_by` (`updated_by`),
+  KEY `status_id` (`status_id`),
+  CONSTRAINT `api_ibfk_1` FOREIGN KEY (`api_type_id`) REFERENCES `api_type` (`api_type_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `api_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `api_ibfk_3` FOREIGN KEY (`updated_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `api_ibfk_4` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of api
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `api_type`
+-- ----------------------------
+DROP TABLE IF EXISTS `api_type`;
+CREATE TABLE `api_type` (
+  `api_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `api_type_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`api_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of api_type
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `client`
@@ -52,12 +95,15 @@ DROP TABLE IF EXISTS `log`;
 CREATE TABLE `log` (
   `log_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `log_type_id` int(10) unsigned NOT NULL,
+  `log_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
   `manager_id` int(11) unsigned DEFAULT NULL,
   `client_id` int(11) unsigned DEFAULT NULL,
   `token_id` int(11) unsigned DEFAULT NULL,
   `token_type_id` int(11) unsigned DEFAULT NULL,
   `recharge_id` int(11) unsigned DEFAULT NULL,
-  `log_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `provider_id` int(10) unsigned DEFAULT NULL,
+  `provider_token_id` int(10) unsigned DEFAULT NULL,
+  `api_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`log_id`),
   KEY `log_type_id` (`log_type_id`),
   KEY `manager_id` (`manager_id`),
@@ -127,6 +173,66 @@ CREATE TABLE `manager_role` (
 
 -- ----------------------------
 -- Records of manager_role
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `provider`
+-- ----------------------------
+DROP TABLE IF EXISTS `provider`;
+CREATE TABLE `provider` (
+  `provider_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `provider_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `provider_website` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `provider_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `provider_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `updated_by` int(11) unsigned NOT NULL,
+  `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  `status_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`provider_id`),
+  KEY `created_by` (`created_by`),
+  KEY `updated_by` (`updated_by`),
+  KEY `status_id` (`status_id`),
+  CONSTRAINT `provider_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `provider_ibfk_2` FOREIGN KEY (`updated_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `provider_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of provider
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `provider_token`
+-- ----------------------------
+DROP TABLE IF EXISTS `provider_token`;
+CREATE TABLE `provider_token` (
+  `provider_token_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `provider_id` int(10) unsigned NOT NULL,
+  `provider_token_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `provider_token_rate` double(10,2) NOT NULL DEFAULT 0.00,
+  `provider_token_balance` double(10,2) NOT NULL DEFAULT 0.00,
+  `provider_token_expiry` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned NOT NULL,
+  `updated_by` int(10) unsigned NOT NULL,
+  `status_id` int(10) unsigned NOT NULL,
+  `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  PRIMARY KEY (`provider_token_id`,`provider_token_key`),
+  KEY `token_ibfk_2` (`created_by`),
+  KEY `token_ibfk_3` (`updated_by`),
+  KEY `status_id` (`status_id`),
+  KEY `token_id` (`provider_token_id`),
+  KEY `provider_id` (`provider_id`),
+  CONSTRAINT `provider_token_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `provider_token_ibfk_3` FOREIGN KEY (`updated_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `provider_token_ibfk_4` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `provider_token_ibfk_5` FOREIGN KEY (`provider_id`) REFERENCES `provider` (`provider_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of provider_token
 -- ----------------------------
 
 -- ----------------------------
