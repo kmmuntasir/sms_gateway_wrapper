@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-10-25 03:59:54
+Date: 2020-10-25 04:32:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -194,6 +194,7 @@ DROP TABLE IF EXISTS `provider`;
 CREATE TABLE `provider` (
   `provider_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `provider_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `provider_library` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `provider_website` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `provider_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `provider_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -214,7 +215,7 @@ CREATE TABLE `provider` (
 -- ----------------------------
 -- Records of provider
 -- ----------------------------
-INSERT INTO `provider` VALUES ('1', 'Green Web', 'https://sms.greenweb.com.bd/', null, null, '1', '1', '2020-10-25 03:43:16', '2020-10-25 03:55:36', '1');
+INSERT INTO `provider` VALUES ('1', 'Green Web', 'greenweb', 'https://sms.greenweb.com.bd/', null, null, '1', '1', '2020-10-25 03:43:16', '2020-10-25 04:31:19', '1');
 
 -- ----------------------------
 -- Table structure for `provider_token`
