@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-10-25 03:00:23
+Date: 2020-10-25 03:08:49
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -281,6 +281,48 @@ CREATE TABLE `settings` (
 
 -- ----------------------------
 -- Records of settings
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sms`
+-- ----------------------------
+DROP TABLE IF EXISTS `sms`;
+CREATE TABLE `sms` (
+  `sms_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sms_text` text COLLATE utf8_unicode_ci NOT NULL,
+  `sms_datetime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `sms_phone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `sms_status_id` int(10) unsigned NOT NULL,
+  `client_id` int(10) unsigned NOT NULL,
+  `token_id` int(10) unsigned NOT NULL,
+  `provider_token_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`sms_id`),
+  KEY `sms_status_id` (`sms_status_id`),
+  KEY `client_id` (`client_id`),
+  KEY `token_id` (`token_id`),
+  KEY `provider_token_id` (`provider_token_id`),
+  CONSTRAINT `sms_ibfk_1` FOREIGN KEY (`sms_status_id`) REFERENCES `sms_status` (`sms_status_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sms_ibfk_2` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sms_ibfk_3` FOREIGN KEY (`token_id`) REFERENCES `token` (`token_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sms_ibfk_4` FOREIGN KEY (`provider_token_id`) REFERENCES `provider_token` (`provider_token_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of sms
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sms_status`
+-- ----------------------------
+DROP TABLE IF EXISTS `sms_status`;
+CREATE TABLE `sms_status` (
+  `sms_status_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sms_status_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`sms_status_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of sms_status
 -- ----------------------------
 
 -- ----------------------------
