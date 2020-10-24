@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-10-25 03:34:16
+Date: 2020-10-25 03:59:54
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,13 +22,15 @@ DROP TABLE IF EXISTS `api`;
 CREATE TABLE `api` (
   `api_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `api_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `api_keyword` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `api_endpoint` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `provider_id` int(10) unsigned NOT NULL,
   `api_type_id` int(10) unsigned NOT NULL,
   `created_by` int(10) unsigned NOT NULL,
   `updated_by` int(11) unsigned NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
-  `status_id` int(10) unsigned DEFAULT NULL,
+  `status_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`api_id`),
   KEY `api_type_id` (`api_type_id`),
   KEY `created_by` (`created_by`),
@@ -38,11 +40,14 @@ CREATE TABLE `api` (
   CONSTRAINT `api_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `api_ibfk_3` FOREIGN KEY (`updated_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `api_ibfk_4` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of api
 -- ----------------------------
+INSERT INTO `api` VALUES ('1', 'Greenweb Synchronous', 'greenweb_sync', 'https://sms.greenweb.com.bd/api.php', '1', '1', '1', '1', '2020-10-25 03:48:11', '2020-10-25 03:48:11', '1');
+INSERT INTO `api` VALUES ('2', 'Greenweb Asynchronous', 'greenweb_async', 'https://sms.greenweb.com.bd/api2.php', '1', '2', '1', '1', '2020-10-25 03:48:18', '2020-10-25 03:48:18', '1');
+INSERT INTO `api` VALUES ('3', 'Greenweb Information', 'greenweb_info', 'https://sms.greenweb.com.bd/g_api.php', '1', '1', '1', '1', '2020-10-25 03:48:27', '2020-10-25 03:48:27', '1');
 
 -- ----------------------------
 -- Table structure for `api_type`
@@ -52,11 +57,13 @@ CREATE TABLE `api_type` (
   `api_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `api_type_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`api_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of api_type
 -- ----------------------------
+INSERT INTO `api_type` VALUES ('1', 'Synchronous');
+INSERT INTO `api_type` VALUES ('2', 'Asynchronous');
 
 -- ----------------------------
 -- Table structure for `client`
@@ -82,11 +89,12 @@ CREATE TABLE `client` (
   CONSTRAINT `client_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `client_ibfk_2` FOREIGN KEY (`updated_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `client_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of client
 -- ----------------------------
+INSERT INTO `client` VALUES ('1', 'Omni Test Client', 'Test Person', 'Test Address', 'test@email.com', '123', '0123456798', '1', '1', '1', '2020-10-25 03:58:47', '0000-00-00 00:00:00');
 
 -- ----------------------------
 -- Table structure for `log`
@@ -155,11 +163,12 @@ CREATE TABLE `manager` (
   KEY `manager_role_id` (`manager_role_id`),
   CONSTRAINT `manager_ibfk_1` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `manager_ibfk_2` FOREIGN KEY (`manager_role_id`) REFERENCES `manager_role` (`manager_role_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of manager
 -- ----------------------------
+INSERT INTO `manager` VALUES ('1', 'Tony Stark', 'ironman', '123', 'tony@stark.com', '0123456789', '1', '1');
 
 -- ----------------------------
 -- Table structure for `manager_role`
@@ -169,11 +178,14 @@ CREATE TABLE `manager_role` (
   `manager_role_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `manager_role_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`manager_role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of manager_role
 -- ----------------------------
+INSERT INTO `manager_role` VALUES ('1', 'Superadmin');
+INSERT INTO `manager_role` VALUES ('2', 'Admin');
+INSERT INTO `manager_role` VALUES ('3', 'Manager');
 
 -- ----------------------------
 -- Table structure for `provider`
@@ -197,11 +209,12 @@ CREATE TABLE `provider` (
   CONSTRAINT `provider_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `provider_ibfk_2` FOREIGN KEY (`updated_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `provider_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of provider
 -- ----------------------------
+INSERT INTO `provider` VALUES ('1', 'Green Web', 'https://sms.greenweb.com.bd/', null, null, '1', '1', '2020-10-25 03:43:16', '2020-10-25 03:55:36', '1');
 
 -- ----------------------------
 -- Table structure for `provider_token`
@@ -229,11 +242,12 @@ CREATE TABLE `provider_token` (
   CONSTRAINT `provider_token_ibfk_3` FOREIGN KEY (`updated_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `provider_token_ibfk_4` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `provider_token_ibfk_5` FOREIGN KEY (`provider_id`) REFERENCES `provider` (`provider_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of provider_token
 -- ----------------------------
+INSERT INTO `provider_token` VALUES ('1', '1', '46a97c98e7751d33c527dce90c10d1d1', '30.00', '6130.00', '2020-11-18 00:00:00', '1', '1', '1', '2020-10-25 03:55:40', '2020-10-25 03:56:17');
 
 -- ----------------------------
 -- Table structure for `recharge`
@@ -277,11 +291,12 @@ CREATE TABLE `settings` (
   `settings_company_email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `settings_company_phone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`settings_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of settings
 -- ----------------------------
+INSERT INTO `settings` VALUES ('1', 'Omni SMS', 'Dhaka', 'sample@example.com', '0123456789');
 
 -- ----------------------------
 -- Table structure for `sms`
@@ -319,11 +334,16 @@ CREATE TABLE `sms_status` (
   `sms_status_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `sms_status_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`sms_status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of sms_status
 -- ----------------------------
+INSERT INTO `sms_status` VALUES ('1', 'Unsent');
+INSERT INTO `sms_status` VALUES ('2', 'Failed');
+INSERT INTO `sms_status` VALUES ('3', 'Submitted');
+INSERT INTO `sms_status` VALUES ('4', 'Sent');
+INSERT INTO `sms_status` VALUES ('5', 'Delivered');
 
 -- ----------------------------
 -- Table structure for `status`
@@ -333,11 +353,14 @@ CREATE TABLE `status` (
   `status_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of status
 -- ----------------------------
+INSERT INTO `status` VALUES ('1', 'Active');
+INSERT INTO `status` VALUES ('2', 'Deactive');
+INSERT INTO `status` VALUES ('3', 'Deleted');
 
 -- ----------------------------
 -- Table structure for `token`
@@ -371,11 +394,12 @@ CREATE TABLE `token` (
   CONSTRAINT `token_ibfk_4` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `token_ibfk_5` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `token_ibfk_6` FOREIGN KEY (`provider_token_id`) REFERENCES `provider_token` (`provider_token_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of token
 -- ----------------------------
+INSERT INTO `token` VALUES ('1', 'c38fde33d4bec1ef9db83ec6ccf7eaad', '40.00', '5000.00', '2020-11-10 00:00:00', '2', '1', '1', '1', '1', '1', '2020-10-25 03:59:24', '0000-00-00 00:00:00');
 
 -- ----------------------------
 -- Table structure for `token_type`
@@ -399,8 +423,10 @@ CREATE TABLE `token_type` (
   CONSTRAINT `token_type_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `token_type_ibfk_2` FOREIGN KEY (`updated_by`) REFERENCES `manager` (`manager_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `token_type_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of token_type
 -- ----------------------------
+INSERT INTO `token_type` VALUES ('1', 'Omni Normal', '30.00', '0', '0', '1', '1', '1', '2020-10-25 03:51:07', '2020-10-25 03:51:35');
+INSERT INTO `token_type` VALUES ('2', 'Omni Fixed', '40.00', '0', '0', '1', '1', '1', '2020-10-25 03:51:22', '0000-00-00 00:00:00');
