@@ -5,6 +5,9 @@ class MY_Controller extends CI_Controller {
 
 	public function __construct()  {
 		parent::__construct();
+
+		// Setting Timezone
+		date_default_timezone_set("Asia/Dhaka");
 	}
 }
 
@@ -340,5 +343,9 @@ class UNAUTH_REST_Controller extends REST_Controller {
 			}
 			else $this->restResponse(null, MESSAGE_EXPIRED_TOKEN, STATUS_FAILED, HTTP_UNAUTHORIZED);
 		}
+	}
+
+	public function validateSingleNumber($to) {
+		return (substr_count($to, ',') > 0) ? false : true;
 	}
 }

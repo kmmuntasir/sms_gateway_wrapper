@@ -163,6 +163,7 @@ define('MESSAGE_EXPIRED_TOKEN', "Token is Expired!!");
 define('MESSAGE_INSUFFICIENT_BALANCE', "Insufficient Balance!!");
 define('MESSAGE_SUCCESS', "success");
 define('MESSAGE_BAD_DATA_FORMAT', "Bad Data Format");
+define('MESSAGE_SINGLE_SMS_ONLY', "This API allows only single SMS. If you want to send multiple or broadcast sms, please use case specific API");
 define('MESSAGE_SYSTEM_ERROR', "System Error!! Please try again later");
 define('MESSAGE_SEND_FAILED', "Sms failed to send. Please check the number and try again.");
 
@@ -175,7 +176,19 @@ define('STATUS_SUCCESS', "success");
 |--------------------------------------------------------------------------
 |
 */
-define("REQUEST_SINGLE_SMS", 	array("token", "to", "message", "method"));
+define("REQUEST_SINGLE_SMS", 	array("token", "to", "message"));
 define("REQUEST_MULTIPLE_SMS", 	array("token", "smsData"));
 define("REQUEST_SMS_DATA", 		array("to", "message"));
 define("REQUEST_TOKEN_INFO", 	array("token"));
+
+/*
+|--------------------------------------------------------------------------
+| Status ID Constants
+|--------------------------------------------------------------------------
+|
+*/
+define('SMS_STATUS_UNSENT', 1);
+define('SMS_STATUS_FAILED', 2);
+define('SMS_STATUS_SUBMITTED', 3);
+define('SMS_STATUS_SENT', 4);
+define('SMS_STATUS_DELIVERED', 5);

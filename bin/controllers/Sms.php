@@ -6,6 +6,7 @@ class Sms extends UNAUTH_REST_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('token_m');
+		$this->load->model('sms_m');
 	}
 
 	public function index() {
@@ -15,6 +16,13 @@ class Sms extends UNAUTH_REST_Controller {
 		if(!$this->__validate($request, REQUEST_SINGLE_SMS)) {
 
 			$this->restResponse(null, MESSAGE_BAD_DATA_FORMAT, STATUS_FAILED, HTTP_BAD_REQUEST);
+		}
+
+		if(!isset($request->method)) $request->method = API_TYPE_ASYNC;
+
+		if(!$this->validateSingleNumber($request->to)) {
+
+			$this->restResponse(null, MESSAGE_SINGLE_SMS_ONLY, STATUS_FAILED, HTTP_BAD_REQUEST);
 		}
 
 		$apiTypeId = $this->getApiTypeId($request->method, true);
@@ -38,6 +46,7 @@ class Sms extends UNAUTH_REST_Controller {
 
 		$token->apiType = $request->method;
 		$token = (array) $token;
+//		$this->restResponse($token);
 
 		// load provider library with provider and provider_token settings
 		$this->load->library($token['provider_library'], $token, 'provider');
@@ -51,6 +60,18 @@ class Sms extends UNAUTH_REST_Controller {
 		$status = $this->provider->send($sms);
 
 		if($status) {
+			$dbSms = array();
+			$dbSms['sms_phone'] = $sms->to;
+			$dbSms['sms_text'] = $sms->message;
+			$dbSms['sms_datetime'] = $this->now();
+			$dbSms['sms_status_id'] = SMS_STATUS_SENT;
+			$dbSms['client_id'] = $token['client_id'];
+			$dbSms['token_id'] = $token['token_id'];
+			$dbSms['provider_token_id'] = $token['provider_token_id'];
+
+			// Insert SMS record in database
+			// Update both client token and provider token balance
+			$this->sms_m->executePostSingleSuccessOperations($dbSms, $token);
 			$this->restResponse(null, MESSAGE_SUCCESS);
 		}
 		else {
