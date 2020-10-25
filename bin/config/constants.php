@@ -93,6 +93,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 */
 defined('HTTP_OK')        			OR define('HTTP_OK', 200);
 defined('HTTP_CREATED')				OR define('HTTP_CREATED', 201);
+defined('HTTP_BAD_REQUEST')			OR define('HTTP_BAD_REQUEST', 400);
 defined('HTTP_UNAUTHORIZED')			OR define('HTTP_UNAUTHORIZED', 401);
 defined('HTTP_FORBIDDEN')				OR define('HTTP_FORBIDDEN', 403);
 defined('HTTP_NOT_FOUND')				OR define('HTTP_NOT_FOUND', 404);
@@ -123,13 +124,58 @@ define('HEADER_AUTHORIZATION', "Authorization");
 
 /*
 |--------------------------------------------------------------------------
+| Status ID Constants
+|--------------------------------------------------------------------------
+|
+*/
+define('STATUS_ACTIVE', 1);
+define('STATUS_DEACTIVE', 2);
+define('STATUS_DELETED', 3);
+
+/*
+|--------------------------------------------------------------------------
+| API Type ID Constants
+|--------------------------------------------------------------------------
+|
+*/
+
+define('API_TYPE_IDS', array(
+	'sync' 	=> 1,
+	'async' => 2,
+	'info' 	=> 3,
+));
+
+define('API_TYPE_SYNC', 'sync');
+define('API_TYPE_ASYNC', 'async');
+define('API_TYPE_INFO', 'info');
+
+/*
+|--------------------------------------------------------------------------
 | Response Text Constants
 |--------------------------------------------------------------------------
 |
 */
 define('MESSAGE_UNAUTHORIZED', "Unauthorized");
 define('MESSAGE_NOT_FOUND', "NOT FOUND");
+define('MESSAGE_INVALID_TOKEN', "Invalid Token");
+define('MESSAGE_INACTIVE_TOKEN', "Inactive Token");
+define('MESSAGE_EXPIRED_TOKEN', "Token is Expired!!");
+define('MESSAGE_INSUFFICIENT_BALANCE', "Insufficient Balance!!");
 define('MESSAGE_SUCCESS', "success");
+define('MESSAGE_BAD_DATA_FORMAT', "Bad Data Format");
+define('MESSAGE_SYSTEM_ERROR', "System Error!! Please try again later");
+define('MESSAGE_SEND_FAILED', "Sms failed to send. Please check the number and try again.");
 
 define('STATUS_FAILED', "failed");
 define('STATUS_SUCCESS', "success");
+
+/*
+|--------------------------------------------------------------------------
+| REQUEST Format Constants
+|--------------------------------------------------------------------------
+|
+*/
+define("REQUEST_SINGLE_SMS", 	array("token", "to", "message", "method"));
+define("REQUEST_MULTIPLE_SMS", 	array("token", "smsData"));
+define("REQUEST_SMS_DATA", 		array("to", "message"));
+define("REQUEST_TOKEN_INFO", 	array("token"));

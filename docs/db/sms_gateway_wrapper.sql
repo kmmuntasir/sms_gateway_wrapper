@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-10-25 04:32:02
+Date: 2020-10-25 08:55:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,7 +22,6 @@ DROP TABLE IF EXISTS `api`;
 CREATE TABLE `api` (
   `api_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `api_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `api_keyword` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `api_endpoint` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `provider_id` int(10) unsigned NOT NULL,
   `api_type_id` int(10) unsigned NOT NULL,
@@ -45,9 +44,9 @@ CREATE TABLE `api` (
 -- ----------------------------
 -- Records of api
 -- ----------------------------
-INSERT INTO `api` VALUES ('1', 'Greenweb Synchronous', 'greenweb_sync', 'https://sms.greenweb.com.bd/api.php', '1', '1', '1', '1', '2020-10-25 03:48:11', '2020-10-25 03:48:11', '1');
-INSERT INTO `api` VALUES ('2', 'Greenweb Asynchronous', 'greenweb_async', 'https://sms.greenweb.com.bd/api2.php', '1', '2', '1', '1', '2020-10-25 03:48:18', '2020-10-25 03:48:18', '1');
-INSERT INTO `api` VALUES ('3', 'Greenweb Information', 'greenweb_info', 'https://sms.greenweb.com.bd/g_api.php', '1', '1', '1', '1', '2020-10-25 03:48:27', '2020-10-25 03:48:27', '1');
+INSERT INTO `api` VALUES ('1', 'Greenweb Synchronous', 'https://sms.greenweb.com.bd/api.php', '1', '1', '1', '1', '2020-10-25 06:45:20', '2020-10-25 06:45:20', '1');
+INSERT INTO `api` VALUES ('2', 'Greenweb Asynchronous', 'https://sms.greenweb.com.bd/api2.php', '1', '2', '1', '1', '2020-10-25 06:45:22', '2020-10-25 06:45:22', '1');
+INSERT INTO `api` VALUES ('3', 'Greenweb Information', 'https://sms.greenweb.com.bd/g_api.php', '1', '3', '1', '1', '2020-10-25 06:46:34', '2020-10-25 06:46:34', '1');
 
 -- ----------------------------
 -- Table structure for `api_type`
@@ -57,13 +56,14 @@ CREATE TABLE `api_type` (
   `api_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `api_type_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`api_type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of api_type
 -- ----------------------------
 INSERT INTO `api_type` VALUES ('1', 'Synchronous');
 INSERT INTO `api_type` VALUES ('2', 'Asynchronous');
+INSERT INTO `api_type` VALUES ('3', 'Information');
 
 -- ----------------------------
 -- Table structure for `client`
@@ -233,7 +233,8 @@ CREATE TABLE `provider_token` (
   `status_id` int(10) unsigned NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
-  PRIMARY KEY (`provider_token_id`,`provider_token_key`),
+  PRIMARY KEY (`provider_token_id`),
+  UNIQUE KEY `provider_token_key` (`provider_token_key`) USING BTREE,
   KEY `token_ibfk_2` (`created_by`),
   KEY `token_ibfk_3` (`updated_by`),
   KEY `status_id` (`status_id`),
@@ -382,6 +383,7 @@ CREATE TABLE `token` (
   `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
   PRIMARY KEY (`token_id`,`token_key`),
+  UNIQUE KEY `token_key` (`token_key`) USING BTREE,
   KEY `token_type_id` (`token_type_id`),
   KEY `token_ibfk_2` (`created_by`),
   KEY `token_ibfk_3` (`updated_by`),
