@@ -291,6 +291,13 @@ class UNAUTH_REST_Controller extends REST_Controller {
 		parent::__construct();
 
 	}
+}
+
+class SMS_REST_Controller extends REST_Controller {
+
+	public function __construct()  {
+		parent::__construct();
+	}
 
 	/*
 	 * API Related Methods
@@ -307,6 +314,15 @@ class UNAUTH_REST_Controller extends REST_Controller {
 		else return null;
 	}
 
+	public function getValidApiTypeId($method, $excludeInfo=false) {
+		$apiTypeId = $this->getApiTypeId($method, true);
+
+		if($apiTypeId == NULL) {
+
+			$this->restResponse(null, MESSAGE_BAD_DATA_FORMAT, STATUS_FAILED, HTTP_BAD_REQUEST);
+		}
+	}
+
 	public function convertProviderToken($token) {
 		$token->token_status_id = $token->provider_token_status_id;
 		$token->token_rate = $token->provider_token_rate;
@@ -316,18 +332,27 @@ class UNAUTH_REST_Controller extends REST_Controller {
 	}
 
 	public function validateTokenStatus($token, $providerToken=false) {
+		if($token == NULL) {
+
+			$this->restResponse(null, MESSAGE_INVALID_TOKEN, STATUS_FAILED, HTTP_NOT_FOUND);
+		}
 		if($providerToken) $token = $this->convertProviderToken($token);
 		if($token->token_status_id != STATUS_ACTIVE) {
 			if($providerToken) {
 				$this->restResponse(null, MESSAGE_SYSTEM_ERROR, STATUS_FAILED, HTTP_INTERNAL_SERVER_ERROR);
 			}
-			else $this->restResponse(null, MESSAGE_INACTIVE_TOKEN, STATUS_FAILED, HTTP_UNAUTHORIZED);
+			else {
+				if($token->token_status_id == STATUS_LOCKED) {
+					$this->restResponse(null, MESSAGE_LOCKED_TOKEN, STATUS_FAILED, HTTP_UNAUTHORIZED);
+				}
+				else $this->restResponse(null, MESSAGE_INACTIVE_TOKEN, STATUS_FAILED, HTTP_UNAUTHORIZED);
+			}
 		}
 	}
 
-	public function validateTokenBalance($token, $providerToken=false) {
+	public function validateTokenBalance($token, $numberOfSms=1, $providerToken=false) {
 		if($providerToken) $token = $this->convertProviderToken($token);
-		if($token->token_rate > $token->token_balance) {
+		if(($token->token_rate * $numberOfSms) > $token->token_balance) {
 			if($providerToken) {
 				$this->restResponse(null, MESSAGE_SYSTEM_ERROR, STATUS_FAILED, HTTP_INTERNAL_SERVER_ERROR);
 			}
@@ -346,6 +371,94 @@ class UNAUTH_REST_Controller extends REST_Controller {
 	}
 
 	public function validateSingleNumber($to) {
-		return (substr_count($to, ',') > 0) ? false : true;
+
+		return (is_string($to) && strlen($to) > 0 && substr_count($to, ',') == 0) ? true : false;
+	}
+
+	public function validateTokenFormat($token) {
+
+		return (is_string($token) && strlen($token) == 32) ? true : false;
+	}
+
+	public function validateMessageFormat($message, $ignoreLength=false) {
+		if(!(is_string($message) && strlen($message) > 0)) return false;
+		if(!$ignoreLength && strlen($message) > MAX_MESSAGE_LENGTH) return false;
+		return true;
+	}
+
+	public function validateRequestModelForSmsMode($request, $mode) {
+		if(!$this->validateTokenFormat($request->token)) {
+
+			$this->restResponse(null, MESSAGE_INVALID_TOKEN, STATUS_FAILED, HTTP_NOT_FOUND);
+		}
+		if($mode == SMS_SINGLE) {
+			if(!$this->__validate($request, REQUEST_SINGLE_SMS)) {
+
+				$this->restResponse(null, MESSAGE_BAD_DATA_FORMAT, STATUS_FAILED, HTTP_BAD_REQUEST);
+			}
+			if(!$this->validateSingleNumber($request->to)) {
+
+				$this->restResponse(null, MESSAGE_SINGLE_SMS_ONLY, STATUS_FAILED, HTTP_BAD_REQUEST);
+			}
+			if($this->validateMessageFormat($request->message)) {
+
+				$this->restResponse(null, MESSAGE_LENGTH_TOO_LARGE, STATUS_FAILED, HTTP_UNAUTHORIZED);
+			}
+		}
+		else if($mode == SMS_MULTIPLE) {
+			if(!($this->__validate($request, REQUEST_MULTIPLE_SMS) && is_array($request->smsData))) {
+
+				$this->restResponse(null, MESSAGE_BAD_DATA_FORMAT, STATUS_FAILED, HTTP_BAD_REQUEST);
+			}
+			if(count($request->smsData) > MAX_NUMBERS) {
+
+				$this->restResponse(null, MESSAGE_PAYLOAD_TOO_LARGE, STATUS_FAILED, HTTP_UNAUTHORIZED);
+			}
+			foreach ($request->smsData as $sms) {
+				if(!($this->__validate($sms, REQUEST_SMS_DATA) && $this->validateSingleNumber($sms->to) && $this->validateMessageFormat($sms->message, true))) {
+
+					$this->restResponse(null, MESSAGE_BAD_DATA_FORMAT, STATUS_FAILED, HTTP_BAD_REQUEST);
+				}
+//				Currently we will not check for large payload in multiple message, it will automatically fail
+//				if($this->validateMessageFormat($sms->message)) {
+//
+//					$this->restResponse(null, MESSAGE_LENGTH_TOO_LARGE, STATUS_FAILED, HTTP_UNAUTHORIZED);
+//				}
+			}
+		}
+		else if($mode == SMS_BROADCAST) {
+			if(!($this->__validate($request, REQUEST_BROADCAST_SMS) && is_array($request->to))) {
+
+				$this->restResponse(null, MESSAGE_BAD_DATA_FORMAT, STATUS_FAILED, HTTP_BAD_REQUEST);
+			}
+			if(count($request->to) > MAX_NUMBERS) {
+
+				$this->restResponse(null, MESSAGE_PAYLOAD_TOO_LARGE, STATUS_FAILED, HTTP_UNAUTHORIZED);
+			}
+			foreach ($request->to as $number) {
+				if(!$this->validateSingleNumber($number)) {
+
+					$this->restResponse(null, MESSAGE_BAD_DATA_FORMAT, STATUS_FAILED, HTTP_BAD_REQUEST);
+				}
+			}
+			if($this->validateMessageFormat($request->message)) {
+
+				$this->restResponse(null, MESSAGE_LENGTH_TOO_LARGE, STATUS_FAILED, HTTP_UNAUTHORIZED);
+			}
+		}
+	}
+
+	public function sanitizeBroadcastNumberList($request) {
+		$request->to = array_unique($request->to);
+		return $request;
+	}
+
+	public function getInitializerForProviderLibrary($token) {
+		$initializerData = array();
+		$initializerData['tokenKey'] = $token->provider_token_key;
+		$initializerData['apiEndpoint'] = $token->api_endpoint;
+		$initializerData['mode'] = $token->smsMode;
+
+		return $initializerData;
 	}
 }

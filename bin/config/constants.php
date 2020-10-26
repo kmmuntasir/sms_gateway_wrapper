@@ -124,6 +124,15 @@ define('HEADER_AUTHORIZATION', "Authorization");
 
 /*
 |--------------------------------------------------------------------------
+| Business Decision Constants
+|--------------------------------------------------------------------------
+|
+*/
+define('MAX_NUMBERS', 500);
+define('MAX_MESSAGE_LENGTH', 700);
+
+/*
+|--------------------------------------------------------------------------
 | Status ID Constants
 |--------------------------------------------------------------------------
 |
@@ -131,6 +140,7 @@ define('HEADER_AUTHORIZATION', "Authorization");
 define('STATUS_ACTIVE', 1);
 define('STATUS_DEACTIVE', 2);
 define('STATUS_DELETED', 3);
+define('STATUS_LOCKED', 4);
 
 /*
 |--------------------------------------------------------------------------
@@ -159,12 +169,19 @@ define('MESSAGE_UNAUTHORIZED', "Unauthorized");
 define('MESSAGE_NOT_FOUND', "NOT FOUND");
 define('MESSAGE_INVALID_TOKEN', "Invalid Token");
 define('MESSAGE_INACTIVE_TOKEN', "Inactive Token");
+define('MESSAGE_LOCKED_TOKEN', "Token is locked right now. It happens when a large number of requests hit the server at the same time. Please try again later.");
 define('MESSAGE_EXPIRED_TOKEN', "Token is Expired!!");
 define('MESSAGE_INSUFFICIENT_BALANCE', "Insufficient Balance!!");
 define('MESSAGE_SUCCESS', "success");
-define('MESSAGE_BAD_DATA_FORMAT', "Bad Data Format");
+define('MESSAGE_BAD_DATA_FORMAT', "Bad Data Format! Please consult the API Documentation.");
 define('MESSAGE_SINGLE_SMS_ONLY', "This API allows only single SMS. If you want to send multiple or broadcast sms, please use case specific API");
 define('MESSAGE_SYSTEM_ERROR', "System Error!! Please try again later");
+define('MESSAGE_PAYLOAD_TOO_LARGE', "Maximum " . MAX_NUMBERS . " numbers are supported currently");
+define('MESSAGE_LENGTH_TOO_LARGE', "Maximum " . MAX_MESSAGE_LENGTH . " characters are supported for message currently");
+
+
+define('MESSAGE_SEND_SUCCESS', "SMS sent successfully!");
+define('MESSAGE_SEND_PARTIAL_SUCCESS', "SMS sending was partially successful");
 define('MESSAGE_SEND_FAILED', "Sms failed to send. Please check the number and try again.");
 
 define('STATUS_FAILED', "failed");
@@ -177,6 +194,7 @@ define('STATUS_SUCCESS', "success");
 |
 */
 define("REQUEST_SINGLE_SMS", 	array("token", "to", "message"));
+define("REQUEST_BROADCAST_SMS", array("token", "to", "message"));
 define("REQUEST_MULTIPLE_SMS", 	array("token", "smsData"));
 define("REQUEST_SMS_DATA", 		array("to", "message"));
 define("REQUEST_TOKEN_INFO", 	array("token"));
@@ -192,3 +210,13 @@ define('SMS_STATUS_FAILED', 2);
 define('SMS_STATUS_SUBMITTED', 3);
 define('SMS_STATUS_SENT', 4);
 define('SMS_STATUS_DELIVERED', 5);
+
+/*
+|--------------------------------------------------------------------------
+| SMS Mode Constants
+|--------------------------------------------------------------------------
+|
+*/
+define('SMS_SINGLE', 'SMS_SINGLE');
+define('SMS_MULTIPLE', 'SMS_MULTIPLE');
+define('SMS_BROADCAST', 'SMS_BROADCAST');

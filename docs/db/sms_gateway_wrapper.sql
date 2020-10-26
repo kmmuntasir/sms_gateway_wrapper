@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2020-10-25 08:55:32
+Date: 2020-10-26 06:23:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -249,7 +249,7 @@ CREATE TABLE `provider_token` (
 -- ----------------------------
 -- Records of provider_token
 -- ----------------------------
-INSERT INTO `provider_token` VALUES ('1', '1', '46a97c98e7751d33c527dce90c10d1d1', '30.00', '6130.00', '2020-11-18 00:00:00', '1', '1', '1', '2020-10-25 03:55:40', '2020-10-25 03:56:17');
+INSERT INTO `provider_token` VALUES ('1', '1', '46a97c98e7751d33c527dce90c10d1d1', '30.00', '5760.00', '2020-11-18 00:00:00', '1', '1', '1', '2020-10-25 03:55:40', '2020-10-26 04:17:37');
 
 -- ----------------------------
 -- Table structure for `recharge`
@@ -306,13 +306,15 @@ INSERT INTO `settings` VALUES ('1', 'Omni SMS', 'Dhaka', 'sample@example.com', '
 DROP TABLE IF EXISTS `sms`;
 CREATE TABLE `sms` (
   `sms_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sms_phone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `sms_text` text COLLATE utf8_unicode_ci NOT NULL,
   `sms_datetime` timestamp NOT NULL DEFAULT current_timestamp(),
-  `sms_phone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `sms_status_id` int(10) unsigned NOT NULL,
   `client_id` int(10) unsigned NOT NULL,
   `token_id` int(10) unsigned NOT NULL,
+  `token_rate` double(10,2) NOT NULL,
   `provider_token_id` int(10) unsigned NOT NULL,
+  `provider_token_rate` double(10,2) NOT NULL,
   PRIMARY KEY (`sms_id`),
   KEY `sms_status_id` (`sms_status_id`),
   KEY `client_id` (`client_id`),
@@ -322,11 +324,20 @@ CREATE TABLE `sms` (
   CONSTRAINT `sms_ibfk_2` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `sms_ibfk_3` FOREIGN KEY (`token_id`) REFERENCES `token` (`token_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `sms_ibfk_4` FOREIGN KEY (`provider_token_id`) REFERENCES `provider_token` (`provider_token_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of sms
 -- ----------------------------
+INSERT INTO `sms` VALUES ('1', '015161806034', 'Hello', '2020-10-25 09:31:48', '4', '1', '1', '0.00', '1', '0.00');
+INSERT INTO `sms` VALUES ('2', '015161806034', 'Hello', '2020-10-25 09:34:44', '4', '1', '1', '0.00', '1', '0.00');
+INSERT INTO `sms` VALUES ('3', '015161806034', 'Hello', '2020-10-25 09:35:37', '4', '1', '1', '0.00', '1', '0.00');
+INSERT INTO `sms` VALUES ('4', '01516180603', 'Hello', '2020-10-25 09:37:06', '4', '1', '1', '0.00', '1', '0.00');
+INSERT INTO `sms` VALUES ('5', '01516180603', 'Hello', '2020-10-25 09:38:23', '4', '1', '1', '0.00', '1', '0.00');
+INSERT INTO `sms` VALUES ('6', '01516180603', 'Hello', '2020-10-26 04:15:45', '4', '1', '1', '0.00', '1', '0.00');
+INSERT INTO `sms` VALUES ('7', '01516180603', 'Hello', '2020-10-26 04:15:56', '4', '1', '1', '0.00', '1', '0.00');
+INSERT INTO `sms` VALUES ('8', '01516180603', 'Hello', '2020-10-26 04:16:01', '4', '1', '1', '0.00', '1', '0.00');
+INSERT INTO `sms` VALUES ('9', '01516180603, 01621881799', 'Hello', '2020-10-26 04:17:37', '4', '1', '1', '0.00', '1', '0.00');
 
 -- ----------------------------
 -- Table structure for `sms_status`
@@ -355,7 +366,7 @@ CREATE TABLE `status` (
   `status_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of status
@@ -363,6 +374,7 @@ CREATE TABLE `status` (
 INSERT INTO `status` VALUES ('1', 'Active');
 INSERT INTO `status` VALUES ('2', 'Deactive');
 INSERT INTO `status` VALUES ('3', 'Deleted');
+INSERT INTO `status` VALUES ('4', 'Locked');
 
 -- ----------------------------
 -- Table structure for `token`
@@ -402,7 +414,7 @@ CREATE TABLE `token` (
 -- ----------------------------
 -- Records of token
 -- ----------------------------
-INSERT INTO `token` VALUES ('1', 'c38fde33d4bec1ef9db83ec6ccf7eaad', '40.00', '5000.00', '2020-11-10 00:00:00', '2', '1', '1', '1', '1', '1', '2020-10-25 03:59:24', '0000-00-00 00:00:00');
+INSERT INTO `token` VALUES ('1', 'c38fde33d4bec1ef9db83ec6ccf7eaad', '40.00', '4640.00', '2020-11-10 00:00:00', '2', '1', '1', '1', '1', '1', '2020-10-25 03:59:24', '2020-10-26 04:17:37');
 
 -- ----------------------------
 -- Table structure for `token_type`
