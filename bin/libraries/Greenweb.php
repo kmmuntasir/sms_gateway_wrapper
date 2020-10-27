@@ -118,7 +118,7 @@ class Greenweb
 		return $this->CI->providerResponse(
 			$sent,
 			$failed,
-			count($failed),
+			count($sent),
 			count($failed),
 			$apiResponse
 		);
