@@ -71,6 +71,10 @@ class Greenweb
 	}
 
 	public function sendMultipleSms($request) {
+		foreach ($request->smsData as $key => $sms) {
+			$request->smsData[$key]->message = str_replace("\n", "\\n", $sms->message);
+		}
+
 		$sms = array(
 			'token' 	=> $this->tokenKey,
 			'smsdata' 	=> json_encode($request->smsData)
