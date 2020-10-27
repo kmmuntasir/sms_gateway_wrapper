@@ -5,22 +5,22 @@ class Token_m extends MY_Model {
 
 	public function retrieveToken($token_key, $api_type_id) {
 		$select = "
-			client_id,
-			token_id,
-			token_key,
-			token_rate,
-			token_balance,
-			token_expiry,
+			token.client_id,
+			token.token_id,
+			token.token_key,
+			token.token_rate,
+			token.token_balance,
+			token.token_expiry,
 			token.status_id as token_status_id,
 			provider_token.provider_token_id,
-			provider_token_key,
-			provider_token_rate,
-			provider_token_balance,
-			provider_token_expiry,
+			provider_token.provider_token_key,
+			provider_token.provider_token_rate,
+			provider_token.provider_token_balance,
+			provider_token.provider_token_expiry,
 			provider_token.status_id as provider_token_status_id,
-			provider_name,
-			provider_library,
-			api_endpoint
+			provider.provider_name,
+			provider.provider_library,
+			api.api_endpoint
 		";
 		$this->db->select($select);
 		$this->db->where('token_key', $token_key);
@@ -28,7 +28,14 @@ class Token_m extends MY_Model {
 		$this->db->join('provider', 'provider_token.provider_id = provider.provider_id');
 		$this->db->where('api_type_id', $api_type_id);
 		$this->db->join('api', 'api.provider_id = provider.provider_id');
-		return $this->db->get('token')->row();
+
+		$result = $this->db->get('token');
+
+//		echo '<pre>';
+//		print_r($this->db->last_query());
+//		echo '</pre>';
+		return $result->row();
+//		return $this->db->get('token')->row();
 	}
 
 }

@@ -26,11 +26,11 @@ class Sms_m extends MY_Model {
 
 		$updatedClientToken = array();
 		$updatedClientToken['token_balance'] = $clientToken->token_balance - ($clientToken->token_rate * $count);
-		$this->db->where('token_id', $token['token_id'])->update('token', $updatedClientToken);
+		$this->db->where('token_id', $token->token_id)->update('token', $updatedClientToken);
 
 		$updatedProviderToken = array();
 		$updatedProviderToken['provider_token_balance'] = $providerToken->provider_token_balance - ($providerToken->provider_token_rate * $count);
-		$this->db->where('provider_token_id', $token['provider_token_id'])->update('provider_token', $updatedProviderToken);
+		$this->db->where('provider_token_id', $token->provider_token_id)->update('provider_token', $updatedProviderToken);
 
 		$this->db->trans_complete();
 		return $this->db->trans_status();
@@ -38,7 +38,7 @@ class Sms_m extends MY_Model {
 
 	public function insertAllSms($allSms) {
 		$this->db->trans_start();
-		$this->db->insert_batch($allSms);
+		$this->db->insert_batch('sms', $allSms);
 		$this->db->trans_complete();
 		return $this->db->trans_status();
 	}

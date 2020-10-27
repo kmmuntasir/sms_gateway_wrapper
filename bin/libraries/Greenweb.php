@@ -1,5 +1,9 @@
 <?php
 
+define("GREENWEB_RESPONSE", 	array("to", "message", "status", "statusmsg"));
+define("GREENWEB_SUCCESS_STATUS", "SENT");
+define("GREENWEB_FAILED_STATUS", "FAILED");
+
 class Greenweb
 {
 	protected $CI;
@@ -19,25 +23,15 @@ class Greenweb
 	public function send($request)
 	{
 		if($this->mode == SMS_SINGLE) {
-			$this->sendSingleSms($request);
+			return $this->sendSingleSms($request);
 		}
 		else if($this->mode == SMS_MULTIPLE) {
-			$this->sendSingleSms($request);
+			return $this->sendMultipleSms($request);
 		}
 		else if($this->mode == SMS_BROADCAST) {
-			$this->sendBroadcastSms($request);
+			return $this->sendBroadcastSms($request);
 		}
 
-	}
-
-	public function providerResponse($status, $sent, $failed, $success, $fail) {
-		$response = new stdClass();
-		$response->status = $status;
-		$response->sent = $sent;
-		$response->failed = $failed;
-		$response->success = $success;
-		$response->fail = $fail;
-		return $response;
 	}
 
 	public function sendSingleSms($request) {
@@ -47,33 +41,45 @@ class Greenweb
 			'token' 	=> $this->tokenKey
 		);
 
-		$apiResponse = $this->CI->myCurl($this->apiEndpoint, $sms);
+		$apiResponse = json_decode($this->CI->myCurl($this->apiEndpoint, $sms));
 
-		$errors = substr_count($apiResponse, "Error");
+		if(!(is_array($apiResponse) && $this->CI->__validate($apiResponse[0], GREENWEB_RESPONSE))) {
 
-		$status = MESSAGE_SEND_FAILED;
+			$this->CI->restResponse($apiResponse, MESSAGE_SYSTEM_ERROR, STATUS_FAILED, HTTP_INTERNAL_SERVER_ERROR);
+		}
+
 		$sent = [];
 		$failed = [];
 		$success = 0;
 		$fail = 0;
 
-		if($errors == 0) {
-			$status = MESSAGE_SEND_SUCCESS;
-			$sent[] = $request;
+		if($apiResponse[0]->status == GREENWEB_SUCCESS_STATUS) {
+			$sent[] = $apiResponse[0];
 			$success = 1;
 		} else {
-			$failed[] = $request;
+			$failed[] = $apiResponse[0];
 			$fail = 1;
 		}
 
-		return $this->providerResponse(
-			$status,
+		return $this->CI->providerResponse(
 			$sent,
 			$failed,
 			$success,
-			$fail
+			$fail,
+			$apiResponse[0]
 		);
 	}
+
+	public function sendMultipleSms($request) {
+		$sms = array(
+			'token' 	=> $this->tokenKey,
+			'smsdata' 	=> json_encode($request->smsData)
+		);
+
+		$apiResponse = json_decode($this->CI->myCurl($this->apiEndpoint, $sms));
+
+		return $this->getSanitizedResponseForSms($apiResponse);
+}
 
 	public function sendBroadcastSms($request) {
 		$to = $delimiter = "";
@@ -87,59 +93,35 @@ class Greenweb
 			'token' 	=> $this->tokenKey
 		);
 
-		$apiResponse = $this->CI->myCurl($this->apiEndpoint, $sms);
+		$apiResponse = json_decode($this->CI->myCurl($this->apiEndpoint, $sms));
 
-		$sanitizedResponse = $this->getSanitizedResponseForBroadcastSms($apiResponse);
-
-		$status = MESSAGE_SEND_FAILED;
-
-		if(count($sanitizedResponse->sent) == 0) {
-			$status = MESSAGE_SEND_FAILED;
-		} else if(count($sanitizedResponse->failed) == 0) {
-			$status = MESSAGE_SEND_SUCCESS;
-		}
-		else {
-			$status = MESSAGE_SEND_PARTIAL_SUCCESS;
-		}
-
-		return $this->providerResponse(
-			$status,
-			$sanitizedResponse->sent,
-			$sanitizedResponse->failed,
-			count($sanitizedResponse->sent),
-			count($sanitizedResponse->failed)
-		);
+		return $this->getSanitizedResponseForSms($apiResponse);
 	}
 
-	public function getSanitizedResponseForBroadcastSms($apiResponse) {
+	public function getSanitizedResponseForSms($apiResponse) {
 
-		$apiResponse = str_replace("\n", "", $apiResponse);
-		$apiResponse = str_replace(":", "", $apiResponse);
-		$apiResponse = str_replace("Invalid Number", "", $apiResponse);
-		$apiResponse = str_replace("SMS Added for Sending Successfully", "", $apiResponse);
+		if(!is_array($apiResponse)) {
 
-		$sent = explode("!", $apiResponse);
-
-		$failed = [];
-
-		foreach ($sent as $key => $result) {
-			if($result == "") unset($sent[$key]);
-			else if(strpos($result, "E") === 0) {
-				$result = str_replace("Error", "", $result);
-				$result = trim($result);
-				$failed[] = $result;
-				unset($sent[$key]);
-			}
-			else $sent[$key] = trim($sent[$key]);
+			$this->CI->restResponse(null, MESSAGE_SYSTEM_ERROR, STATUS_FAILED, HTTP_INTERNAL_SERVER_ERROR);
 		}
-		$sent = array_values($sent);
-		$failed = array_values($failed);
 
-		$sanitizedResponse = new stdClass();
-		$sanitizedResponse->sent = $sent;
-		$sanitizedResponse->failed = $failed;
+		$sent = $failed = [];
 
-		return $sanitizedResponse;
+		foreach ($apiResponse as $key => $response) {
+			if($response->status == GREENWEB_SUCCESS_STATUS) {
+				$sent[] = $response;
+			} else {
+				$failed[] = $response;
+			}
+		}
+
+		return $this->CI->providerResponse(
+			$sent,
+			$failed,
+			count($failed),
+			count($failed),
+			$apiResponse
+		);
 	}
 
 }

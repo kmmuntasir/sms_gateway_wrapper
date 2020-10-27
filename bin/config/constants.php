@@ -184,8 +184,9 @@ define('MESSAGE_SEND_SUCCESS', "SMS sent successfully!");
 define('MESSAGE_SEND_PARTIAL_SUCCESS', "SMS sending was partially successful");
 define('MESSAGE_SEND_FAILED', "Sms failed to send. Please check the number and try again.");
 
-define('STATUS_FAILED', "failed");
-define('STATUS_SUCCESS', "success");
+define('STATUS_FAILED', "FAILED");
+define('STATUS_SUCCESS', "SUCCESS");
+define('STATUS_PARTIAL_SUCCESS', "PARTIAL_SUCCESS");
 
 /*
 |--------------------------------------------------------------------------

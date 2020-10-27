@@ -303,6 +303,16 @@ class SMS_REST_Controller extends REST_Controller {
 	 * API Related Methods
 	 */
 
+	public function providerResponse($sent, $failed, $success, $fail, $apiResponse) {
+		$response = new stdClass();
+		$response->sent = $sent;
+		$response->failed = $failed;
+		$response->success = $success;
+		$response->fail = $fail;
+		$response->apiResponse = $apiResponse;
+		return $response;
+	}
+
 	public function getApiTypeId($method, $excludeInfo=false) {
 		$api_type_ids = API_TYPE_IDS;
 		if(isset($api_type_ids[$method])) {
@@ -321,6 +331,7 @@ class SMS_REST_Controller extends REST_Controller {
 
 			$this->restResponse(null, MESSAGE_BAD_DATA_FORMAT, STATUS_FAILED, HTTP_BAD_REQUEST);
 		}
+		return $apiTypeId;
 	}
 
 	public function convertProviderToken($token) {
@@ -336,13 +347,14 @@ class SMS_REST_Controller extends REST_Controller {
 
 			$this->restResponse(null, MESSAGE_INVALID_TOKEN, STATUS_FAILED, HTTP_NOT_FOUND);
 		}
-		if($providerToken) $token = $this->convertProviderToken($token);
-		if($token->token_status_id != STATUS_ACTIVE) {
+		$tempToken = (object)((array)$token);
+		if($providerToken) $tempToken = $this->convertProviderToken($tempToken);
+		if($tempToken->token_status_id != STATUS_ACTIVE) {
 			if($providerToken) {
 				$this->restResponse(null, MESSAGE_SYSTEM_ERROR, STATUS_FAILED, HTTP_INTERNAL_SERVER_ERROR);
 			}
 			else {
-				if($token->token_status_id == STATUS_LOCKED) {
+				if($tempToken->token_status_id == STATUS_LOCKED) {
 					$this->restResponse(null, MESSAGE_LOCKED_TOKEN, STATUS_FAILED, HTTP_UNAUTHORIZED);
 				}
 				else $this->restResponse(null, MESSAGE_INACTIVE_TOKEN, STATUS_FAILED, HTTP_UNAUTHORIZED);
@@ -351,8 +363,9 @@ class SMS_REST_Controller extends REST_Controller {
 	}
 
 	public function validateTokenBalance($token, $numberOfSms=1, $providerToken=false) {
-		if($providerToken) $token = $this->convertProviderToken($token);
-		if(($token->token_rate * $numberOfSms) > $token->token_balance) {
+		$tempToken = (object)((array)$token);
+		if($providerToken) $tempToken = $this->convertProviderToken($tempToken);
+		if(($tempToken->token_rate * $numberOfSms) > $tempToken->token_balance) {
 			if($providerToken) {
 				$this->restResponse(null, MESSAGE_SYSTEM_ERROR, STATUS_FAILED, HTTP_INTERNAL_SERVER_ERROR);
 			}
@@ -361,8 +374,9 @@ class SMS_REST_Controller extends REST_Controller {
 	}
 
 	public function validateTokenExpiry($token, $providerToken=false) {
-		if($providerToken) $token = $this->convertProviderToken($token);
-		if($this->isExpired($token->token_expiry)) {
+		$tempToken = (object)((array)$token);
+		if($providerToken) $tempToken = $this->convertProviderToken($tempToken);
+		if($this->isExpired($tempToken->token_expiry)) {
 			if($providerToken) {
 				$this->restResponse(null, MESSAGE_SYSTEM_ERROR, STATUS_FAILED, HTTP_INTERNAL_SERVER_ERROR);
 			}
@@ -400,7 +414,7 @@ class SMS_REST_Controller extends REST_Controller {
 
 				$this->restResponse(null, MESSAGE_SINGLE_SMS_ONLY, STATUS_FAILED, HTTP_BAD_REQUEST);
 			}
-			if($this->validateMessageFormat($request->message)) {
+			if(!$this->validateMessageFormat($request->message)) {
 
 				$this->restResponse(null, MESSAGE_LENGTH_TOO_LARGE, STATUS_FAILED, HTTP_UNAUTHORIZED);
 			}
@@ -441,7 +455,7 @@ class SMS_REST_Controller extends REST_Controller {
 					$this->restResponse(null, MESSAGE_BAD_DATA_FORMAT, STATUS_FAILED, HTTP_BAD_REQUEST);
 				}
 			}
-			if($this->validateMessageFormat($request->message)) {
+			if(!$this->validateMessageFormat($request->message)) {
 
 				$this->restResponse(null, MESSAGE_LENGTH_TOO_LARGE, STATUS_FAILED, HTTP_UNAUTHORIZED);
 			}
