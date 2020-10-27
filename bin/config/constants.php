@@ -180,6 +180,8 @@ define('MESSAGE_PAYLOAD_TOO_LARGE', "Maximum " . MAX_NUMBERS . " numbers are sup
 define('MESSAGE_LENGTH_TOO_LARGE', "Maximum " . MAX_MESSAGE_LENGTH . " characters are supported for message currently");
 
 
+define('MESSAGE_TOKEN_INFO_CURRENCY_DISCLAIMER', "Please remember that token RATE and BALANCE are displayed as Paisa.");
+
 define('MESSAGE_SEND_SUCCESS', "SMS sent successfully!");
 define('MESSAGE_SEND_PARTIAL_SUCCESS', "SMS sending was partially successful");
 define('MESSAGE_SEND_FAILED', "Sms failed to send. Please check the number and try again.");

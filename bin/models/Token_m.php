@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Token_m extends MY_Model {
 
+	public function getTokenInfo($token_key) {
+		$this->db->where('token_key', $token_key);
+		return $this->db->get('token')->row();
+	}
+
 	public function retrieveToken($token_key, $api_type_id) {
 		$select = "
 			token.client_id,
@@ -28,14 +33,7 @@ class Token_m extends MY_Model {
 		$this->db->join('provider', 'provider_token.provider_id = provider.provider_id');
 		$this->db->where('api_type_id', $api_type_id);
 		$this->db->join('api', 'api.provider_id = provider.provider_id');
-
-		$result = $this->db->get('token');
-
-//		echo '<pre>';
-//		print_r($this->db->last_query());
-//		echo '</pre>';
-		return $result->row();
-//		return $this->db->get('token')->row();
+		return $this->db->get('token')->row();
 	}
 
 }

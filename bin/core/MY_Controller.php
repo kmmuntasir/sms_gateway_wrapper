@@ -400,8 +400,16 @@ class SMS_REST_Controller extends REST_Controller {
 		return true;
 	}
 
+	public function validateRequestModelForInfo($request) {
+
+		if(!(isset($request->token) && $this->validateTokenFormat($request->token))) {
+
+			$this->restResponse(MESSAGE_NOT_FOUND, MESSAGE_INVALID_TOKEN, STATUS_FAILED, HTTP_NOT_FOUND);
+		}
+	}
+
 	public function validateRequestModelForSmsMode($request, $mode) {
-		if(!$this->validateTokenFormat($request->token)) {
+		if(!(isset($request->token) && $this->validateTokenFormat($request->token))) {
 
 			$this->restResponse(null, MESSAGE_INVALID_TOKEN, STATUS_FAILED, HTTP_NOT_FOUND);
 		}
