@@ -1,0 +1,505 @@
+{
+	"info": {
+		"_postman_id": "d850fa34-84e8-4169-9329-bf2b70412b76",
+		"name": "GreenWeb SMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1.x Send SMS",
+			"item": [
+				{
+					"name": "1.1 Send SMS Synchronusly",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "to",
+									"value": "01516180603",
+									"type": "text"
+								},
+								{
+									"key": "message",
+									"value": "Omni ISP\\nInvoice#1\\n-Unpaid-\\n2020-08-01 05:48 am\\n(#1) 1_roslyn_F14\\nTK 500\\nMonth: Aug-20\\nBalance: 0\\nCurrent Due: 500",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/api.php?json",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"api.php"
+							],
+							"query": [
+								{
+									"key": "json",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.2 Send SMS Asynchronusly",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "to",
+									"value": "01516180603, 01218456, 01516180603, 01218457, 01621881799, 654149489, 984919818, 6119819198, 65161981981, 619819819",
+									"type": "text"
+								},
+								{
+									"key": "message",
+									"value": "Test message for green web sms postman collection",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/api2.php?json",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"api2.php"
+							],
+							"query": [
+								{
+									"key": "json",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 Send Multiple SMS Asynchronusly",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "text"
+								},
+								{
+									"key": "smsdata",
+									"value": " [{\"to\":\"01516180603\",\"message\":\"Test message\"},{\"to\":\"01218456\",\"message\":\"Test message\"},{\"to\":\"01516180603\",\"message\":\"Test message\"},{\"to\":\"01621881799\",\"message\":\"Test message\"},{\"to\":\"654149489\",\"message\":\"Test message\"},{\"to\":\"984919818\",\"message\":\"Test message\"},{\"to\":\"6119819198\",\"message\":\"Test message\"},{\"to\":\"65161981981\",\"message\":\"Test message\"},{\"to\":\"619819819\",\"message\":\"Test message\"}]",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/api2.php?json",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"api2.php"
+							],
+							"query": [
+								{
+									"key": "json",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 Send Multiple SMS Asynchronusly Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "text"
+								},
+								{
+									"key": "smsdata",
+									"value": " [{\"to\":\"01516180603\",\"message\":\"Omni ISP\\\\nInvoice#1\\\\n-Unpaid-\\n2020-08-01 05:48 am\\\\n(#1) 1_roslyn_F14\\\\nTK 500\\\\nMonth: Aug-20\\\\nBalance: 0\\\\nCurrent Due: 500\"}]",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/api2.php?json",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"api2.php"
+							],
+							"query": [
+								{
+									"key": "json",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 Send Broadcast SMS Asynchronusly",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "to",
+									"value": "01516180603, 01218456, 01516180603, 01218457, 01621881799, 654149489, 984919818, 6119819198, 65161981981, 619819819",
+									"type": "text"
+								},
+								{
+									"key": "message",
+									"value": "Test message for green web sms postman collection",
+									"type": "text"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/api2.php?json",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"api2.php"
+							],
+							"query": [
+								{
+									"key": "json",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2.x Others",
+			"item": [
+				{
+					"name": "2.1 Check Balance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": " {{token}}",
+									"type": "text"
+								},
+								{
+									"key": "balance",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/g_api.php",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"g_api.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.2 Check SMS Rate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": " {{token}}",
+									"type": "text"
+								},
+								{
+									"key": "rate",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/g_api.php",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"g_api.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.3 Check Total SMS From Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": " {{token}}",
+									"type": "text"
+								},
+								{
+									"key": "tokensms",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/g_api.php",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"g_api.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.4 Check Total SMS From User Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": " {{token}}",
+									"type": "text"
+								},
+								{
+									"key": "totalsms",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/g_api.php",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"g_api.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.5 Check Token Expiry Date",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": " {{token}}",
+									"type": "text"
+								},
+								{
+									"key": "expiry",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/g_api.php",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"g_api.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.6 Check all misc data altogether",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "token",
+									"value": " {{token}}",
+									"type": "text"
+								},
+								{
+									"key": "balance",
+									"value": "ljkjjkldsf",
+									"type": "text"
+								},
+								{
+									"key": "expiry",
+									"value": "asdftghhh",
+									"type": "text"
+								},
+								{
+									"key": "rate",
+									"value": "asdf3434",
+									"type": "text"
+								},
+								{
+									"key": "tokensms",
+									"value": "asdfgggag",
+									"type": "text"
+								},
+								{
+									"key": "totalsms",
+									"value": "asdfddf",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://sms.greenweb.com.bd/g_api.php",
+							"protocol": "https",
+							"host": [
+								"sms",
+								"greenweb",
+								"com",
+								"bd"
+							],
+							"path": [
+								"g_api.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

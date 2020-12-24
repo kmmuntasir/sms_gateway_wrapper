@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "89b552e7-5871-4b41-b3ec-1cfbc7a307eb",
+		"name": "sms-gateway-wrapper",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1.x Send SMS",
+			"item": [
+				{
+					"name": "1.1 Send Single SMS Synchronously",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"c38fde33d4bec1ef9db83ec6ccf7eaad\",\n    \"to\": \"01516180603\",\n    \"message\": \"He\\nllo\",\n    \"method\": \"sync\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/sms_gateway_wrapper_api/sms/single",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"sms_gateway_wrapper_api",
+								"sms",
+								"single"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.2 Send Single SMS Asynchronously",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"c38fde33d4bec1ef9db83ec6ccf7eaad\",\n    \"to\": \"01516180603\",\n    \"message\": \"Hello\",\n    \"method\": \"async\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/sms_gateway_wrapper_api/sms/single",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"sms_gateway_wrapper_api",
+								"sms",
+								"single"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 Send Broadcast SMS Asynchronously",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"c38fde33d4bec1ef9db83ec6ccf7eaad\",\n    \"to\": [\n        \"01516180603\", \n        \"01621881799\",\n        \"231094098089\",\n        \"789234\",\n        \"01935699499\"\n    ],\n    \"message\": \"H\\nello\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/sms_gateway_wrapper_api/sms/broadcast",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"sms_gateway_wrapper_api",
+								"sms",
+								"broadcast"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 Send Multiple SMS Asynchronously",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"c38fde33d4bec1ef9db83ec6ccf7eaad\",\n    \"smsData\": [\n        {\n            \"to\": \"01516180603\",\n            \"message\": \"Hello\"\n        },\n        {\n            \"to\": \"231094098089\",\n            \"message\": \"Hello\"\n        },\n        {\n            \"to\": \"01621881799\",\n            \"message\": \"Hello\"\n        },\n        {\n            \"to\": \"789234\",\n            \"message\": \"Hello\"\n        },\n        {\n            \"to\": \"01935699499\",\n            \"message\": \"Hello\"\n        },\n        {\n            \"to\": \"01516180603\",\n            \"message\": \"Hello\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/sms_gateway_wrapper_api/sms/multiple",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"sms_gateway_wrapper_api",
+								"sms",
+								"multiple"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 Send Multiple SMS Asynchronously Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"c38fde33d4bec1ef9db83ec6ccf7eaad\",\n    \"smsData\": [\n        {\n            \"to\": \"01516180603\",\n            \"message\": \"Omni ISP\\nInvoice#1\\n-Unpaid-\\n2020-08-01 05:48 am\\n(#1) 1_roslyn_F14\\nTK 500\\nMonth: Aug-20\\nBalance: 0\\nCurrent Due: 500\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/sms_gateway_wrapper_api/sms/multiple",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"sms_gateway_wrapper_api",
+								"sms",
+								"multiple"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2.x Info",
+			"item": [
+				{
+					"name": "2.1 Get Token Info",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"c38fde33d4bec1ef9db83ec6ccf7eaad\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/sms_gateway_wrapper_api/info",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"sms_gateway_wrapper_api",
+								"info"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
